@@ -8,4 +8,10 @@ In the project directory, you can run:
 
 ## Despliegue
 
+### `npm install`
+
 ### `npm start`
+
+### `npm build`
+
+### ` `

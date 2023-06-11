@@ -174,7 +174,7 @@ function App() {
             </Toggle>
           </Toggle>
           <Toggle onScreen={toggle2}>
-            <Summary data={formData}></Summary>
+            <Summary data={formData} files={fileList}></Summary>
             <Button handleClick={toggleForm}>Regresar</Button>
             <Button handleClick={finish}>Finalizar pedido</Button>
           </Toggle>

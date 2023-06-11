@@ -103,18 +103,16 @@ export const DragAndDrop = ({ children, handleDrop }) => {
 };
 
 export const Grid = ({ files, setFiles, handleDrop }) => {
-  let dragItem = useRef();
-  let dragOverItem = useRef();
-  let check = false;
+  let dragItem = null;
+  let dragOverItem = null;
   const [s3Domain, setS3Domain] = useState("");
-    let filesCopy = [...files];
+  let filesCopy = [...files];
   const [events, dispatch] = useReducer(eventReducer, []);
 
   let state = {
     drag: false,
   };
   let dragCounter = 0;
-  let dropRef = useRef();
 
   function dragEvent(e) {
     dispatch({
@@ -155,26 +153,22 @@ export const Grid = ({ files, setFiles, handleDrop }) => {
       handleDrop: handleDrop,
     });
   }
-  
-  useEffect(() => {
-    let div = dropRef.current;
-  });
 
+  const dragStartEvent = (e) => {
+    console.log(e.target.children[1].src);
+    dragItem = filesCopy.find((file) => file.url == e.target.children[1].src);
+    console.log(dragItem);
+  };
 
-  //   const dragStart = (e, position) => {
-  //     console.log("start");
-  //     console.log(dragItem);
-  //     console.log(e);
-  //     dragItem.current = position;
-  //   };
-
-  //   const dragEnter = (e, position) => {
-  //     console.log("enter");
-
-  //     e.preventDefault();
-  //     e.stopPropagation();
-  //     dragOverItem.current = position;
-  //   };
+  const dragEnterEvent = (e) => {
+    console.log(e);
+    e.preventDefault();
+    e.stopPropagation();
+    //dragOverItem = filesCopy.find(
+      //(file) => file.url == e.target.children[1].src
+    //);
+    console.log(dragOverItem);
+  };
 
   //   //   const submit = (e) => {
   //   //     console.log("submit");
@@ -209,51 +203,67 @@ export const Grid = ({ files, setFiles, handleDrop }) => {
         justifyContent: "center",
       }}
     >
-        {(filesCopy.length>0) && files.map((file)=>{
-        if (file != null){
-        return (
-            <Image
+      {filesCopy.length > 0 &&
+        files.map((file) => {
+          if (file != null) {
+            return (
+              <Image
+                dragOver={(e) => dragEvent(e)}
+                drop={dropEvent}
+                dragLeave={dragOutEvent}
+                dragStart={dragStartEvent}
+                dragEnter={dragEnterEvent}
+                src={file.url}
+              />
+            );
+          }
+        })}
+      <Image
         dragOver={(e) => dragEvent(e)}
-        dragEnter={(e) => dragInEvent(e)}
+        dragIn={(e) => dragInEvent(e)}
         drop={dropEvent}
         dragLeave={dragOutEvent}
-        key={file.index}
-        src={file.url}
+        dragStart={dragStartEvent}
+        src={""}
       />
-        )}})}
-            <Image
-            dragOver={(e) => dragEvent(e)}
-            dragEnter={(e) => dragInEvent(e)}
-            drop={dropEvent}
-            dragLeave={dragOutEvent}
-            key={""}
-            src={""}
-          />
     </div>
   );
 };
 
-const Image = ({ children, dragEnter, dragLeave, dragOver, drop, key, src }) => {
+const Image = ({
+  children,
+  dragStart,
+  dragEnter,
+  dragLeave,
+  dragOver,
+  dragIn,
+  drop,
+  src,
+}) => {
   return (
     <div
-    style={{flex:"1"}}
+      style={{ flex: "1", display: "flex"}}
+      onDragStart={dragStart}
+      onDragEnter={dragEnter}
       draggable
     >
       <label
         htmlFor="file"
-        onDragEnter={dragEnter}
+        onDragEnter={dragIn}
         onDragLeave={dragLeave}
         onDragOver={dragOver}
         onDrop={drop}
         style={{
+          textAlign: "center",
+          position: "absolute",
           display: "block",
           width: "30%",
-          height: "20rem",
+          height: "20rem"
         }}
       >
         <input
           style={{
-            display: "block",
+            display: "inline",
             height: "20rem",
             textAlign: "center",
           }}
@@ -263,9 +273,9 @@ const Image = ({ children, dragEnter, dragLeave, dragOver, drop, key, src }) => 
         ></input>
       </label>
       <img
-        style={{ border: "2px", borderColor: "red" }}
-        width="30%"
-        src={src} draggable
+        style={{ border: "2px", borderColor: "red", objectFit: "cover"}}
+        src={src}
+        width="100%"
       ></img>
       {children}
     </div>

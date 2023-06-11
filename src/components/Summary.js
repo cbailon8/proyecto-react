@@ -1,4 +1,6 @@
-export const Summary = ({ data }) => {
+import {Grid} from 'react-visual-grid'
+
+export const Summary = ({ data, files }) => {
   console.log(data);
   const { paymentInfo:payment, checkoutAddress:checkout, deliveryAddress:delivery } = data;
 
@@ -104,6 +106,19 @@ export const Summary = ({ data }) => {
           {delivery.po}
         </span>
       </div>
+      <Album files={files}/>
     </div>
   );
 };
+
+
+const Album = ({files}) => {
+  let images = files.map((file)=>{
+    const src = file.url;
+    const alt = `Image ${file.index}`;
+     return {src,alt}
+ })
+  return (
+    <Grid images={images} gridLayout="horizontal" width={"30rem"} height={"15rem"}/>
+  )
+}

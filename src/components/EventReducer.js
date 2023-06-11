@@ -2,13 +2,11 @@ export const eventReducer = (state, action) => {
   let {event, type, dragState, dragCounter, handleDrop} = action;
 
   function dragEvent(e) {
-    console.log(e)
     e.preventDefault();
     e.stopPropagation();
   }
 
   function dragInEvent(e) {
-    console.log(e)
     e.preventDefault();
     e.stopPropagation();
     dragCounter++;
@@ -18,7 +16,6 @@ export const eventReducer = (state, action) => {
   }
 
   function dragOutEvent(e) {
-    console.log(e)
     e.preventDefault();
     e.stopPropagation();
     dragCounter--;
@@ -28,13 +25,10 @@ export const eventReducer = (state, action) => {
   }
 
   function dropEvent(e) {
-    console.log(e)
     e.preventDefault();
     e.stopPropagation();
     dragState = { drag: false };
-    console.log(e);
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      console.log(e);
       handleDrop(e.dataTransfer.files);
       e.dataTransfer.clearData();
       dragCounter = 0;
