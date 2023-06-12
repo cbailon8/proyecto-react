@@ -6,14 +6,13 @@ import {
   FormManager,
 } from "./components/Form";
 import { DataSelect } from "./components/DataSelect";
-import { Toggle } from "./components/Toggle";
+import { Toggle, ToggleTheme } from "./components/Toggle";
 import { S3Uploader } from "./components/S3Uploader";
 import { S3Viewer } from "./components/S3Viewer";
 import React, { useState, useReducer, useEffect } from "react";
 import { DataContext } from "./components/DataContext";
 import { Summary } from "./components/Summary";
-import { Album } from "./components/Album";
-import { DragAndDrop, Grid, ImageManager } from "./components/Image";
+import { ImgGrid, ImageManager } from "./components/Image";
 import { eventReducer } from "./components/EventReducer";
 import { ImageContext } from "./components/ImageContext";
 import { Lightsail } from "aws-sdk";
@@ -44,16 +43,17 @@ const model = {
   deliveryAddress: {},
 };
 
-const fileModel = {url:"", index:""}
-
-let fileStart = 1;
+const fileModel = { url: "", index: "", name: "" };
 
 function App() {
+  const [theme, setTheme] = useState("dark");
+  const [fileStart, setStart] = useState(1);
   const [file, setFile] = useState(fileModel);
   const [fileList, setFileList] = useState([
     {
-      url: "https://downloader.disk.yandex.ru/preview/df1c051a1c132e4bcd2821f08a5fa87da94fcc662fd95e50822d54e1ef3693e1/648620fe/yMv37ItAtOed_Ru6xHM28-d5MAQtcjv1oS1YVWUPc8635hNsGpT8DwBFNspI-HtciZkAaZifGEUd1QHq-ECwvA%3D%3D?uid=0&filename=%EF%BC%95%E6%9C%88%20%E8%A7%92%E5%B7%BB%E3%82%8F%E3%81%9F%E3%82%81%20%E9%BB%92%E6%98%9F%E7%B4%85%E7%99%BD%E5%85%88%E7%94%9F.jpg&disposition=inline&hash=&limit=0&content_type=image%2Fjpeg&owner_uid=0&tknv=v2&size=1318x727",
+      url: "https://m.media-amazon.com/images/I/A1ntnF3PJOL._AC_CLa%7C2140%2C2000%7C717LuXqML%2BL.png%7C0%2C0%2C2140%2C2000%2B0.0%2C0.0%2C2140.0%2C2000.0_UY1100_.png",
       index: 1,
+      name: "an attempt was made.png",
     },
   ]);
   const [diffData, setDiffData] = useState(false);
@@ -82,11 +82,16 @@ function App() {
   );
 
   function fileSubmit(files) {
-    console.log(files);
-    fileStart++;
-    setFile({ url: URL.createObjectURL(files[0]), index: fileStart });
-    console.log("success");
-    console.log(fileList);
+    let i = fileStart;
+    setFile({
+      url: URL.createObjectURL(files[0]),
+      index: i + 1,
+      name: files[0].name,
+    });
+  }
+
+  function fileUpdate(files) {
+    setFileList(files);
   }
 
   function handleSubmit(event) {
@@ -122,33 +127,49 @@ function App() {
   }
 
   function loadApp(event) {
-    setFile({url:"",index:""})
-    setLoad(true)
-}
+    setFile(fileModel);
+    setLoad(true);
+  }
 
-  useEffect(()=>{
-    if(file.url.length > 5){
-      setFileList([...fileList, file])
+  useEffect(() => {
+    if (file.url.length > 5) {
+      setFileList([...fileList, file]);
+      setStart(fileStart+1);
     }
-  },[file])
+  }, [file]);
 
-  //<DragAndDrop handleDrop={fileSubmit}></DragAndDrop>
+  function toggleTheme() {
+    if (theme === "light") {
+      setTheme("dark");
+    } else {
+      setTheme("light");
+    }
+  }
+
+  useEffect(() => {
+    document.body.className = theme;
+  }, [theme]);
+
   return (
-    <div style={{ overflow: "hidden" }} className="App">
+    <div className={`App ${theme}`} style={{ overflow: "hidden" }}>
       <header className="App-header">
+        <ToggleTheme toggle={toggleTheme} />
         <ImageContext.Provider>
           <Toggle onScreen={!load}>
-            <Button handleClick={loadApp}>Empezar</Button>
+            <button onClick={loadApp}>Empezar</button>
           </Toggle>
           <Toggle onScreen={load}>
-          <Toggle onScreen={!toggle1}>
-            <ImageManager context={imageContext}>
-              
-              <Grid handleDrop={fileSubmit} files={fileList} setFiles={setFileList}></Grid>
-            </ImageManager>
-
-            <Button handleClick={toggleForm}>Continuar</Button>
-          </Toggle>
+            <Toggle onScreen={!toggle1}>
+              <ImageManager context={imageContext}>
+                <ImgGrid
+                  handleUpdate={fileUpdate}
+                  handleDrop={fileSubmit}
+                  files={fileList}
+                  setFiles={setFileList}
+                ></ImgGrid>
+              </ImageManager>
+              <Button handleClick={toggleForm}>Continuar</Button>
+            </Toggle>
           </Toggle>
           <Toggle onScreen={toggle1}>
             <Toggle onScreen={!toggle2}>

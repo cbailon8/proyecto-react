@@ -1,12 +1,12 @@
-import {Grid} from 'react-visual-grid'
+import {Image} from "./Image"
 
 export const Summary = ({ data, files }) => {
   console.log(data);
   const { paymentInfo:payment, checkoutAddress:checkout, deliveryAddress:delivery } = data;
 
   return (
-    <div style={{ display: "flex", flexWrap: "wrap", padding: "0 4px" }}>
-      <div style={{ flex: "50%", padding: "0 4px" }}>
+    <div style={{ padding: "0 4px" }}>
+      <div style={{ display: "flex", flexWrap: "wrap", flexDirection: "column", flex: "50%", padding: "0 4px" }}>
         <h2>Datos de facturación</h2>
         <span>
           <h4>Titular: </h4>
@@ -106,19 +106,14 @@ export const Summary = ({ data, files }) => {
           {delivery.po}
         </span>
       </div>
-      <Album files={files}/>
+      {files.length > 0 &&
+        files.map((file) => {
+          if (file != null) {
+            return (
+              <Image src={file.url}/>
+            );
+          }
+        })}
     </div>
   );
 };
-
-
-const Album = ({files}) => {
-  let images = files.map((file)=>{
-    const src = file.url;
-    const alt = `Image ${file.index}`;
-     return {src,alt}
- })
-  return (
-    <Grid images={images} gridLayout="horizontal" width={"30rem"} height={"15rem"}/>
-  )
-}
