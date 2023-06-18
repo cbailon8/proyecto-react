@@ -3,7 +3,7 @@ import { DataContext } from "./DataContext";
 
 export const Button = ({children, handleClick}) =>{
     return (
-        <div style={{top:"0", right:"0", display: "flex",position: "absolute"}}>
+        <div style={{display: "flex"}}>
             <button onClick={handleClick}>{children}</button>
         </div>
     )

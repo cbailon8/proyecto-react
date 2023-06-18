@@ -7,7 +7,9 @@ El manejo de los datos del cliente se realiza mediante states y context entre lo
 
 **Tiene un toggle para usar la misma dirección de envío y facturación**
 **Posee la opción para alternar entre dark y light mode.**
-**No posee integración con AWS, pero si los módulos para realizarse**
+**No posee integración con AWS, pero el despliegue es el siguiente:**
+
+### http://bailon-react.s3-website-us-east-1.amazonaws.com/
 ## Desarrollo
 
 1. Clonar el repositorio
@@ -25,4 +27,4 @@ El manejo de los datos del cliente se realiza mediante states y context entre lo
 
 Para el despliegue de la aplicación en un servidor o en un servicio de hosting en la nube, se necesita generar los archivos compilados del proyecto, para eso ejecutar el comando
 
-### `npm build`
+### `npm run build`

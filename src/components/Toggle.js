@@ -4,7 +4,7 @@ export const Toggle = ({ children, onScreen }) => {
 
 export const ToggleTheme = ({ toggle }) => {
   return (
-    <div style={{zIndex:"+1", top: "0", left: "0", position: "absolute" }}>
+    <div style={{zIndex:"+1"}}>
       <button
         onClick={toggle}
       >

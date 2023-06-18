@@ -134,7 +134,7 @@ function App() {
   useEffect(() => {
     if (file.url.length > 5) {
       setFileList([...fileList, file]);
-      setStart(fileStart+1);
+      setStart(fileStart + 1);
     }
   }, [file]);
 
@@ -151,9 +151,11 @@ function App() {
   }, [theme]);
 
   return (
-    <div className={`App ${theme}`} style={{ overflow: "hidden" }}>
+    <div className={`App ${theme}`}>
       <header className="App-header">
-        <ToggleTheme toggle={toggleTheme} />
+        <h1>Photo Album<ToggleTheme toggle={toggleTheme} /></h1>
+      </header>
+      <div style={{overflow: "hidden", padding: "20px"}}>
         <ImageContext.Provider>
           <Toggle onScreen={!load}>
             <button onClick={loadApp}>Empezar</button>
@@ -200,7 +202,7 @@ function App() {
             <Button handleClick={finish}>Finalizar pedido</Button>
           </Toggle>
         </ImageContext.Provider>
-      </header>
+      </div>
     </div>
   );
 }
